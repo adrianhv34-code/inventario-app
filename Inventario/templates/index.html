@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+    <h1>Inventario de Alambrón</h1>
+    <h2>Por favor, identifícate:</h2>
+
+    <form action="{{ url_for('login') }}" method="POST" class="form-group">
+        <button type="submit" name="rol" value="Admin" class="btn btn-principal">Soy Administrador</button>
+    </form>
+
+    <hr style="margin: 2rem 0;">
+
+    <h2>Acceso de Invitado</h2>
+    <form action="{{ url_for('login') }}" method="POST">
+        <div class="form-group">
+            <label for="nombre_invitado">Ingresa tu Nombre:</label>
+            <input type="text" name="nombre_invitado" id="nombre_invitado" required>
+        </div>
+        <button type="submit" class="btn btn-invitado">Entrar como Invitado</button>
+    </form>
+{% endblock %}

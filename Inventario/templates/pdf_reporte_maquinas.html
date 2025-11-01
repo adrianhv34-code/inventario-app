@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Inventario</title>
+    <style>
+        body { font-family: sans-serif; font-size: 10px; }
+        h1 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { border: 1px solid #ddd; padding: 6px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .material { font-weight: bold; }
+        .rollos, .peso { text-align: center; }
+        .pesos-lista { font-size: 9px; color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Reporte Final de Inventario</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Material (Grado/MM/Prov)</th>
+                <th>Total Rollos</th>
+                <th>Peso (Prom)</th>
+                <th>Pesos Registrados (Admin)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in reporte %}
+            <tr>
+                <td class="material">
+                    {{ item.grado }} / {{ item.diametro }}mm
+                    <br><small>({{ item.proveedor }})</small>
+                </td>
+                <td class="rollos">{{ item.total_rollos }}</td>
+                <td class="peso">
+                    {{ "%.2f"|format(item.display_peso) }}
+                    <br><small>{{ item.display_tipo }}</small>
+                </td>
+                
+                <td class="pesos-lista">
+                    {% if not item.registros_pesos %}(N/A){% endif %}
+                    {% for reg in item.registros_pesos %}
+                        <strong>Promedio (1-5):</strong><br>
+                        {% for i in range(1, 6) %}{% set p = reg['peso' ~ i] %}
+                            {% if p and p > 0 %}P{{ i }}: {{ p }} kg<br>{% endif %}
+                        {% endfor %}
+                        <strong style="margin-top: 5px; display: inline-block;">Exactos (1-3):</strong><br>
+                        {% for i in range(1, 4) %}{% set p = reg['exacto' ~ i] %}
+                            {% if p and p > 0 %}E{{ i }}: {{ p }} kg<br>{% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

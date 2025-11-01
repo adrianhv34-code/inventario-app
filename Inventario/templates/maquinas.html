@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Registro de Máquinas{% endblock %}
+
+{% block content %}
+    <h2>Registro de Máquinas (Invitado)</h2>
+    <p>Ingresa los datos de las máquinas (TR-01, etc.)</p>
+
+    <form action="{{ url_for('guardar_maquina') }}" method="POST">
+        <div class="form-group">
+            <label for="maquina">Máquina:</label>
+            <select name="maquina" required>
+                {% for m in maquinas %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="grado_acero">Grado de Acero:</label>
+            <select name="grado_acero" required>
+                <option value="">-- Selecciona Grado --</option>
+                {% for g in grados_invitado %}<option value="{{ g }}">{{ g }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="diametro">Diámetro (mm):</label>
+            <select name="diametro" required>
+                <option value="">-- Selecciona Diámetro --</option>
+                {% for d in diametros_invitado %}<option value="{{ d }}">{{ d }}</option>{% endfor %}
+            </select>
+        </div>
+        
+        <fieldset style="border: 1px solid #ccc; padding: 1rem; border-radius: 5px;">
+            <legend>Pesos de Muestra (5)</legend>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="number" step="0.01" name="peso1" placeholder="Peso 1 (kg)">
+                <input type="number" step="0.01" name="peso2" placeholder="Peso 2 (kg)">
+                <input type="number" step="0.01" name="peso3" placeholder="Peso 3 (kg)">
+                <input type="number" step="0.01" name="peso4" placeholder="Peso 4 (kg)">
+                <input type="number" step="0.01" name="peso5" placeholder="Peso 5 (kg)">
+            </div>
+        </fieldset>
+
+        <button type="submit" class="btn btn-principal">Guardar en Máquina</button>
+    </form>
+{% endblock %}

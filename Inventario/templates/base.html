@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - Inventario</title>
+    <style>
+        :root {
+            --azul-principal: #007bff;
+            --verde-invitado: #28a745;
+            --gris-claro: #f4f4f4;
+            --sombra: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            background-color: var(--gris-claro);
+            color: #333;
+        }
+        .container {
+            width: 95%;
+            max-width: 600px; /* Ancho máximo para no verse mal en PC */
+            margin: 1rem auto;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: var(--sombra);
+        }
+        h1, h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; }
+        label { font-weight: bold; margin-bottom: 5px; }
+        input[type="text"], input[type="number"], input[type="password"], select {
+            width: 100%; padding: 0.8rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 5px;
+        }
+        .btn {
+            width: 100%; padding: 0.8rem; font-size: 1.1rem; font-weight: bold;
+            border: none; border-radius: 5px; cursor: pointer; color: white; margin-top: 0.5rem;
+        }
+        .btn-principal { background-color: var(--azul-principal); }
+        .btn-invitado { background-color: var(--verde-invitado); }
+        .btn-secundario { background-color: #6c757d; }
+        .btn-peligro { background-color: #dc3545; }
+        nav {
+            background: #343a40; padding: 0.5rem 1rem; display: flex;
+            justify-content: space-around; align-items: center; flex-wrap: wrap;
+        }
+        nav a { color: white; text-decoration: none; padding: 0.5rem; }
+        .flash {
+            padding: 1rem; margin: 1rem auto; border-radius: 5px; font-weight: bold;
+            text-align: center; width: 95%; max-width: 600px;
+        }
+        .flash.success { background-color: #d4edda; color: #155724; }
+        .flash.danger { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    {% if session['rol'] %}
+    <nav>
+        <a href="{{ url_for('ingresar') }}">Inventario</a>
+        <a href="{{ url_for('reporte') }}">Reporte Inv.</a>
+        {% if session['rol'] == 'Admin' %}
+            <a href="{{ url_for('panel_borrado') }}">Borrar</a>
+        {% else %}
+            <a href="{{ url_for('maquinas') }}">Máquinas</a>
+            <a href="{{ url_for('reporte_maquinas') }}">Rep. Máq.</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Salir ({{ session['usuario'] }})</a>
+    </nav>
+    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

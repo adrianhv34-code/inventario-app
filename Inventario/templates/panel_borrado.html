@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Panel de Borrado{% endblock %}
+
+{% block content %}
+    <h2>Panel de Borrado (Admin)</h2>
+    
+    <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px;">Registros de Invitados (Rollos)</h3>
+    <ul style="list-style: none; padding: 0;">
+    {% for c in conteos_invitados %}
+        <li style="background: #f9f9f9; border: 1px solid #eee; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>{{ c.usuario }}</strong> ({{ c.fecha_creado.strftime('%d-%m %H:%M') }})
+                <br>
+                Contó: <strong>{{ c.cantidad_rollos }} rollos</strong>
+                <br>
+                De: {{ c.grado_acero }} / {{ c.diametro }}mm
+            </div>
+            <form action="{{ url_for('borrar_conteo', id=c.id) }}" method="POST" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-peligro" onclick="return confirm('¿Borrar registro de {{ c.usuario }}?')">Borrar</button>
+            </form>
+        </li>
+    {% else %}
+        <li>No hay registros de invitados.</li>
+    {% endfor %}
+    </ul>
+
+    <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 2rem;">Mis Registros (Pesos)</h3>
+    <ul style="list-style: none; padding: 0;">
+    {% for c in conteos_admin %}
+        <li style="background: #f9f9f9; border: 1px solid #eee; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>Mi registro</strong> ({{ c.fecha_creado.strftime('%d-%m %H:%M') }})
+                <br>
+                Material: {{ c.grado_acero }} / {{ c.diametro }}mm
+                <br>
+                Pesos Exactos: {{ c.exacto1 or 'N/A' }}, {{ c.exacto2 or 'N/A' }}, {{ c.exacto3 or 'N/A' }}
+            </div>
+            <form action="{{ url_for('borrar_conteo', id=c.id) }}" method="POST" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-peligro" onclick="return confirm('¿Borrar mi propio registro de pesos?')">Borrar</button>
+            </form>
+        </li>
+    {% else %}
+        <li>No hay registros de admin.</li>
+    {% endfor %}
+    </ul>
+
+    <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 2rem;">Registros de Máquinas (Invitados)</h3>
+    <ul style="list-style: none; padding: 0;">
+    {% for m in registros_maquinas %}
+        <li style="background: #f9f9f9; border: 1px solid #eee; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>{{ m.maquina }}</strong> (Registrado por: <strong>{{ m.usuario }}</strong>)
+                <br>
+                Material: {{ m.grado_acero }} / {{ m.diametro }}mm
+                <br>
+                <small>Fecha: {{ m.fecha_creado.strftime('%d-%m %H:%M') }}</small>
+            </div>
+            <form action="{{ url_for('borrar_maquina', id=m.id) }}" method="POST" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-peligro" onclick="return confirm('¿Borrar registro de máquina {{ m.maquina }}?')">Borrar</button>
+            </form>
+        </li>
+    {% else %}
+        <li>No hay registros de máquinas.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

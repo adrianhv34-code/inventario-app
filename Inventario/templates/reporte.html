@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Reporte Final{% endblock %}
+
+{% block content %}
+    <h2>Reporte Final de Inventario</h2>
+    
+    <div class="form-group">
+        <a href="{{ url_for('reporte_pdf') }}" class="btn btn-secundario">Descargar Reporte en PDF</a>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 1rem;">
+        <thead>
+            <tr style="background-color: var(--azul-principal); color: white;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Material (Grado/MM/Prov)</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Total Rollos</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Peso (Prom)</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Pesos Registrados (Admin)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in reporte %}
+            <tr style="text-align: left;">
+                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">
+                    {{ item.grado }} / {{ item.diametro }}mm<br>
+                    <small>({{ item.proveedor }})</small>
+                </td>
+                <td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-size: 1.2rem;">
+                    {{ item.total_rollos }}
+                </td>
+                <td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-size: 1.2rem; color: var(--azul-principal);">
+                    {{ "%.2f"|format(item.display_peso) }}
+                    <br><small>{{ item.display_tipo }}</small>
+                </td>
+                
+                <td style="padding: 8px; border: 1px solid #ddd; font-size: 0.8rem;">
+                    {% if not item.registros_pesos %}(Sin registros de peso){% endif %}
+                    {% for reg in item.registros_pesos %}
+                        <strong>Promedio (1-5):</strong><br>
+                        {% for i in range(1, 6) %}{% set p = reg['peso' ~ i] %}
+                            {% if p and p > 0 %}P{{ i }}: {{ p }} kg<br>{% endif %}
+                        {% endfor %}
+                        
+                        <strong style="margin-top: 5px; display: inline-block;">Exactos (1-3):</strong><br>
+                        {% for i in range(1, 4) %}{% set p = reg['exacto' ~ i] %}
+                            {% if p and p > 0 %}E{{ i }}: {{ p }} kg<br>{% endif %}
+                        {% endfor %}
+                        <hr style="margin: 4px 0;">
+                    {% endfor %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 1rem;">
+                    Aún no hay datos de inventario registrados.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
