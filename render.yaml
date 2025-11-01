@@ -1,0 +1,16 @@
+render.yaml
+services:
+  - type: web
+    https://mi-inventario-app.onrender.com  
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.4
+    systemDependencies:
+      - name: libcairo2-dev
+      - name: libpango1.0-dev
+      - name: libgobject-2.0-dev
+      - name: libffi-dev
